@@ -10,12 +10,6 @@ Script Purpose;
    This scripts creates a new database names 'DataWarehouse' after checking if it already exists.
    If the database exists, it is dropped and recreated. Additionally, the scripts sets up three schemas within the databse: 'bronze', 'silver', and 'gold'.
 
-
-WARNING:
-
-Running this script will drop the entire 'DataWarehouse' database if it exists.
-All data in the database will be permanently deleted. Proceed with caution and ensure you have proper backups before running this script.
-
 */
 
 -- Create Warehouse
@@ -25,7 +19,7 @@ USE master;
 Go
 
   -- Drop and recreate the 'DataWarehouse' database
-  IF EXISTS (SELECT 1 FROM sys.database WHERE name = 'DataWarehouse')
+  IF EXISTS (SELECT 1 FROM sys.databases WHERE name = 'DataWarehouse')
   BEGIN 
        ALTER DATABASE Datawarehouse SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
        DROP DATABASE DataWarehouse
@@ -115,8 +109,6 @@ WITH (
     TABLOCK
 );
 
-select * from bronze.crm_cust_info
-
 BULK INSERT bronze.crm_prd_info
 FROM '/var/opt/mssql/datafiles/prd_info.csv'
 WITH (
@@ -124,8 +116,6 @@ WITH (
     FIELDTERMINATOR = ',',
     TABLOCK
 );
-
-select * from bronze.crm_prd_info
 
 BULK INSERT bronze.crm_sales_details
 FROM '/var/opt/mssql/datafiles/sales_details.csv'
@@ -135,10 +125,6 @@ WITH (
     TABLOCK
 );
 
-select * from bronze.crm_sales_details
-
---/Users/kunal/sql-data/source_erp
-
 BULK INSERT bronze.erp_cust_az12
 FROM '/var/opt/mssql/datafiles/source_erp/CUST_AZ12.csv'
 WITH (
@@ -146,8 +132,6 @@ WITH (
     FIELDTERMINATOR = ',',
     TABLOCK
 );
-
-select * from bronze.erp_cust_az12
 
 BULK INSERT bronze.erp_loc_a101
 FROM '/var/opt/mssql/datafiles/source_erp/LOC_A101.csv'
@@ -157,8 +141,6 @@ WITH (
     TABLOCK
 );
 
-select * from bronze.erp_loc_a101
-
 BULK INSERT bronze.erp_px_cat_g1v2
 FROM '/var/opt/mssql/datafiles/source_erp/PX_CAT_G1V2.csv'
 WITH (
@@ -166,5 +148,3 @@ WITH (
     FIELDTERMINATOR = ',',
     TABLOCK
 );
-
-select * from bronze.erp_px_cat_g1v2
