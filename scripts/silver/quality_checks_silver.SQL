@@ -134,12 +134,9 @@ where dwh_create_date is null
  -- Expectation: No Result
 
 select cst_id, count(*) from silver.crm_cust_info group by cst_id having count(*) > 1 or cst_id is null
-select * from silver.crm_cust_info
-select cst_id,cst_key from silver.crm_cust_info where cst_id is null 
-
 
 select * from (select *, ROW_NUMBER() over(partition by cst_id order by cst_create_date desc) as flag_test
-FROM silver.crm_cust_info where cst_id is not null)t
+FROM silver.crm_cust_info where cst_id is not null)t where flag_test = 1
 
 
 -- Check for unwanted spaces in string values and case statement
@@ -147,14 +144,11 @@ FROM silver.crm_cust_info where cst_id is not null)t
 
 select cst_lastname
 from silver.crm_cust_info
-where cst_lastname != TRIM(cst_lastname)    -- TRIM() Removes leading and trailing spaces from a string
+where cst_lastname != TRIM(cst_lastname)    -- We have to keep changing the each char column whether there is space or not
 
 -- Data Normalization & Standardization
 select DISTINCT cst_marital_status
 from silver.crm_cust_info
-
-select * from silver.crm_cust_info
-
 
 INSERT INTO silver.crm_cust_info (cst_id,
     cst_key,
