@@ -28,18 +28,8 @@ CREATE TABLE silver.crm_cust_info (
     cst_create_date Date,
 );
 
-select * from silver.crm_cust_info 
-
-alter table silver.crm_cust_info
-drop column dwh_create_date
-
-drop table silver.crm_cust_info
-
 alter table silver.crm_cust_info 
 add dwh_create_date DATETIME2 DEFAULT GETDATE()
-
-ALTER TABLE silver.crm_cust_info
-DROP COLUMN dwh_create_date
 
 UPDATE silver.crm_cust_info
 SET dwh_create_date = GETDATE()
@@ -57,10 +47,6 @@ CREATE TABLE silver.crm_prd_info (
     prd_start_dt DATETIME,
     prd_end_dt DATETIME,
 );
-
-Select * from silver.crm_prd_info 
-
-drop table silver.crm_prd_info 
 
 ALTER TABLE silver.crm_prd_info 
 add dwh_create_date DATETIME2 DEFAULT GETDATE()
@@ -83,10 +69,6 @@ CREATE TABLE silver.crm_sales_details (
     sls_price INT,
 ) ;
 
-drop table silver.crm_sales_details 
-
-Select * from silver.crm_sales_details
-
 ALTER TABLE silver.crm_sales_details
 ADD dwh_create_date DATETIME2 DEFAULT GETDATE()
 
@@ -106,10 +88,6 @@ CREATE TABLE silver.erp_cust_az12 (
 Alter table silver.erp_cust_az12
 add dwh_create_date DATETIME2 DEFAULT getdate()
 
-select * from silver.erp_cust_az12
-
-drop table silver.erp_cust_az12
-
 update silver.erp_cust_az12
 set dwh_create_date = GETDATE()
 where dwh_create_date is null 
@@ -122,12 +100,8 @@ CREATE TABLE  silver.erp_loc_a101 (
     cntry NVARCHAR(50),
 );
 
-drop table silver.erp_loc_a101
-
 Alter table silver.erp_loc_a101
 add dwh_create_date DATETIME2 DEFAULT getdate()
-
-select * from silver.erp_loc_a101
 
 update silver.erp_loc_a101
 set dwh_create_date = getdate()
@@ -145,10 +119,6 @@ CREATE TABLE silver.erp_px_cat_g1v2 (
 
 Alter table silver.erp_px_cat_g1v2
 add dwh_create_date DATETIME2 DEFAULT getdate()
-
-select * from silver.erp_px_cat_g1v2
-
-drop table silver.erp_px_cat_g1v2
 
 update silver.erp_px_cat_g1v2
 set dwh_create_date = getdate()
