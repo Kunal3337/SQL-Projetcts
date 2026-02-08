@@ -176,38 +176,6 @@ FROM bronze.crm_cust_info where cst_id is not null)t where flag_test = 1
 
 -- ====================================================================================================================
 
-INSERT INTO silver.crm_prd_info(
-    prd_id,
-    cat_id,
-    prd_key,
-    prd_nm,
-    prd_cost,
-    prd_line,
-    prd_start_dt,
-    prd_end_dt
-)
-SELECT prd_id,
-REPLACE(SUBSTRING(prd_key,1,5),'-','_') as cat_id,    
-SUBSTRING(PRD_KEY,7,LEN(PRD_KEY)) AS prd_key,
-prd_nm,
-ISNULL(prd_cost, 0) AS prd_cost,                      
-CASE WHEN UPPER(TRIM(prd_line)) = 'M' THEN 'Mountain' 
-     wHEN UPPER(TRIM(prd_line)) = 'R' THEN 'Road'     
-     wHEN UPPER(TRIM(prd_line)) = 'S' THEN 'Other Sales'
-     wHEN UPPER(TRIM(prd_line)) = 'T' THEN 'Touring'
-     ELSE 'n/a'
-     END as prd_line,
-CAST(prd_start_dt as DATE) as prd_start_dt,
-CAST(LEAD(prd_start_dt) OVER (PARTITION BY prd_key ORDER BY prd_start_dt) -1 AS DATE) AS prd_end_dt
-from bronze.crm_prd_info 
-
-Alter table silver.crm_prd_info
-add dwh_create_date DATETIME2 default getdate()
-
-Update silver.crm_prd_info
-set dwh_create_date = GETDATE()
-where dwh_create_date is null
-
 -- Check for Nulls or duplicates in primary key
 -- Expectation: No Result
 select prd_id as prd, count(*) from silver.crm_prd_info
@@ -229,10 +197,33 @@ SELECT DISTINCT prd_line from silver.crm_prd_info
 SELECT * 
 FROM silver.crm_prd_info  WHERE prd_end_dt < prd_start_dt
 
+INSERT INTO silver.crm_prd_info(
+    prd_id,
+    cat_id,
+    prd_key,
+    prd_nm,
+    prd_cost,
+    prd_line,
+    prd_start_dt,
+    prd_end_dt
+)
+SELECT prd_id,
+REPLACE(SUBSTRING(prd_key,1,5),'-','_') as cat_id,    
+SUBSTRING(PRD_KEY,7,LEN(PRD_KEY)) AS prd_key,
+prd_nm,
+ISNULL(prd_cost, 0) AS prd_cost,                      
+CASE WHEN UPPER(TRIM(prd_line)) = 'M' THEN 'Mountain' 
+     WHEN UPPER(TRIM(prd_line)) = 'R' THEN 'Road'     
+     WHEN UPPER(TRIM(prd_line)) = 'S' THEN 'Other Sales'
+     WHEN UPPER(TRIM(prd_line)) = 'T' THEN 'Touring'
+     ELSE 'n/a'
+     END as prd_line,
+CAST(prd_start_dt as DATE) as prd_start_dt,
+CAST(LEAD(prd_start_dt) OVER (PARTITION BY prd_key ORDER BY prd_start_dt) -1 AS DATE) AS prd_end_dt
+from bronze.crm_prd_info 
+
 select * from silver.crm_prd_info
 --   ============================================================================================================
-select * from silver.crm_sales_details
-
 INSERT INTO silver.crm_sales_details(
     sls_ord_num,
     sls_prd_key,
@@ -298,7 +289,7 @@ OR sls_quantity <= 0
 OR sls_quantity <= 0
 ORDER BY sls_sales,sls_price,sls_quantity
 
-
+select * from silver.crm_sales_details
 --===================================silver.erp_cust_az12===========================================================================
 INSERT INTO silver.erp_cust_az12(
     cid,
