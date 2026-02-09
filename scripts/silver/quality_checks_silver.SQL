@@ -173,7 +173,7 @@ cst_create_date
 from ( select *, ROW_NUMBER() over(partition by cst_id order by cst_create_date desc) as flag_test
 FROM bronze.crm_cust_info where cst_id is not null)t where flag_test = 1
 
-
+select * from silver.crm_cust_info
 -- ====================================================================================================================
 
 -- Check for Nulls or duplicates in primary key
@@ -345,6 +345,8 @@ FROM (
 ) t;
 
 select cntry from silver.erp_loc_a101 where cntry = 'n/a'
+
+select * from silver.erp_loc_a101
 
 --===========================================silver.erp_px_cat_g1v2=========================================================================
 
