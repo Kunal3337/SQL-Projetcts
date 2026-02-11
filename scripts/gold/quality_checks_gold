@@ -1,4 +1,4 @@
--- Explore All Objects in the Database
+/* Explore All Objects in the Database */
 SELECT * FROM INFORMATION_SCHEMA.TABLES
 
 -- Explore All columns in the database
