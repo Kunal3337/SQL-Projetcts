@@ -3,6 +3,10 @@
 DDL Script: Create gold views
 ===============================================================
 This script creates views in data warehouse
+The gold layer represents the final dimension and fact tables (Star Schema)
+
+Usage: 
+- This view can be queried directly for analytics and reporting
 */
 
 -- GOLD LAYER
@@ -26,21 +30,6 @@ left join silver.erp_cust_az12 ca
 ON     ci.cst_key = ca.cid
 left join silver.erp_loc_a101 la 
 ON   ci.cst_key = la.cid
-
-----------------------------------------------------------------------------------------------------
-
-SELECT DISTINCT
-ci.cst_gndr,
-ca.gen,
-case when ci.cst_gndr != 'n/a' then ci.cst_gndr
-else COALESCE(ca.gen,'n/a')
-end as new_gen
-from silver.crm_cust_info ci
-left join silver.erp_cust_az12 ca 
-ON     ci.cst_key = ca.cid
-left join silver.erp_loc_a101 la 
-ON   ci.cst_key = la.cid
-order by 1,2
 
 select * from gold.dim_customers
 
