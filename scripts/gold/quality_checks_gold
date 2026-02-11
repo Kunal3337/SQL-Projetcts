@@ -1,13 +1,8 @@
-/* Explore All Objects in the Database */
+-- Explore All Objects in the Database
 SELECT * FROM INFORMATION_SCHEMA.TABLES
 
 -- Explore All columns in the database
 SELECT * FROM INFORMATION_SCHEMA.COLUMNS
-WHERE TABLE_NAME = 'erp_cust_az12'
-
--- Explore All columns in the database for specific table
-SELECT * FROM INFORMATION_SCHEMA.COLUMNS
-WHERE TABLE_NAME = 'erp_cust_az12'
 
 --DIMENSIONS EXPLORATION
 
@@ -32,7 +27,7 @@ min(birthdate) as oldest_birthdate,
 max(birthdate) as youngest_birthdate
 from gold.dim_customers
 
--- Measures Exploration
+-- MEASURES EXPLORATION
 
 SELECT * FROM INFORMATION_SCHEMA.COLUMNS
 -- Find the total sales
@@ -58,7 +53,7 @@ SELECT count(customer_key) as total_customers from gold.dim_customers
 -- Find the total number of customers that has placed an order
 SELECT 'total customers' as Total_Customers, count(distinct customer_key) as total_customers from gold.fact_sales
 
--- Magnitude
+-- MAGNITUDE
 
 SELECT * FROM INFORMATION_SCHEMA.COLUMNS
 
@@ -122,7 +117,6 @@ order by total_orders
 -- CHANGE OVER TIME ANALYSIS
 
 -- Analyze sales over time
-
 select 
 YEAR(order_date) as order_year,
 MONTH(order_date) as order_year,
